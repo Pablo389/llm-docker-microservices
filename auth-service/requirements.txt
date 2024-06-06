@@ -1,0 +1,8 @@
+# auth-service/requirements.txt
+fastapi
+uvicorn
+sqlalchemy
+passlib[bcrypt]
+python-jose
+psycopg2-binary
+python-dotenv
