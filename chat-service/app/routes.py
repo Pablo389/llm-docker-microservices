@@ -20,7 +20,7 @@ def get_db():
 
 @router.post("/create-chat", response_model=Chat)
 def create_chat(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    print(token)
+    #print(token)
     token_new = verify_token(token)
     user_id = token_new["user_id"]
     new_chat = DBChat(user_id=user_id)
