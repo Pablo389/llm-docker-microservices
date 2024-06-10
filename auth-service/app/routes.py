@@ -39,7 +39,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 @router.get("/validate-token")
 def validate_token_endpoint(token: str = Depends(OAuth2PasswordBearer(tokenUrl="token"))):
     try:
-        print(token)
+        #print(token)
         return validate_token(token)
     except JWTError as e:
         raise HTTPException(status_code=401, detail=str(e))
