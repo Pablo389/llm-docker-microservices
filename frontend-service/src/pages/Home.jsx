@@ -1,12 +1,8 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import {useState, useEffect, useRef, useCallback, useLayoutEffect, useContext} from "react";
 import { BiPlus, BiUser, BiSend, BiSolidUserCircle } from "react-icons/bi";
 import { MdOutlineArrowLeft, MdOutlineArrowRight } from "react-icons/md";
+import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
 
 function Home() {
   const [text, setText] = useState("");
@@ -18,6 +14,9 @@ function Home() {
   const [errorText, setErrorText] = useState("");
   const [isShowSidebar, setIsShowSidebar] = useState(false);
   const scrollToLastItem = useRef(null);
+  const { authToken } = useContext(AuthContext);
+
+  console.log(authToken);
 
   const createNewChat = () => {
     setMessage(null);

@@ -1,9 +1,8 @@
-import "./normal.css";
-import "./App.css";
+import "./normal.css";  
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useContext } from "react";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   /*
@@ -15,13 +14,15 @@ function App() {
   */
 
   return (
-    <div className="App">
-      <Routes>
-        <Route exact path="/" element={<Navigate to="/auth" />} />
-        <Route exact path="/home" element={<Home />} />
-        <Route exact path="/auth" element={<Login />} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Routes>
+          <Route exact path="/" element={<Navigate to="/auth" />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route exact path="/auth" element={<Login />} />
+        </Routes>
+      </div>
+    </AuthProvider>
   );
 }
 
