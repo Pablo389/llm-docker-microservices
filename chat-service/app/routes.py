@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.schemas import ChatCreate, MessageCreate, Chat, Message
 from app.models import Chat as DBChat, Message as DBMessage, SessionLocal
-from app.utils import verify_token
+from app.utils import verify_token, get_openai_completion
 from typing import List
 from fastapi.security import OAuth2PasswordBearer
 
@@ -37,6 +37,13 @@ def create_message(message: MessageCreate, db: Session = Depends(get_db), token:
     db.add(new_message)
     db.commit()
     db.refresh(new_message)
+    if message.role == "user":
+        completion = get_openai_completion(message.content)
+        new_message = DBMessage(chat_id=message.chat_id, role=completion.role, content=completion.content)
+        db.add(new_message)
+        db.commit()
+        db.refresh(new_message)
+    print(new_message)
     return new_message
 
 @router.get("/chats", response_model=List[Chat])

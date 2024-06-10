@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 import requests
+from openai import OpenAI
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -21,3 +22,18 @@ def verify_token(token: str):
     if "user_id" not in user_data:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     return user_data
+
+def get_openai_completion(user_msg: str):
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo-16k",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": user_msg}
+    ]
+    )
+
+    print(completion.choices[0].message)
+    return completion.choices[0].message
