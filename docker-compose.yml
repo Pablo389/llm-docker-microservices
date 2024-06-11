@@ -1,27 +1,30 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:13
+  auth-db:
+    image: postgres:latest
+    container_name: auth_db
     environment:
-      POSTGRES_USER: yourusername
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: yourdatabase
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: auth-llmdocker
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - auth_db_data:/var/lib/postgresql/data
+      - ./sql-scripts/users_table.sql:/docker-entrypoint-initdb.d/users_table.sql
 
   auth-service:
-    build: .
+    build: ./auth-service
+    container_name: auth_service
     environment:
-      - DATABASE_URL=postgresql://yourusername:yourpassword@db:5432/yourdatabase
-      - SECRET_KEY=mysecretkey
-      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@auth_db:5432/auth-llmdocker
+      - SECRET_KEY=${SECRET_KEY}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - auth-db
 
 volumes:
-  postgres_data:
+  auth_db_data:
