@@ -25,6 +25,35 @@ services:
       - "8000:8000"
     depends_on:
       - auth-db
+    
+  chat-db:
+    image: postgres:latest
+    container_name: chat_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: chat-llmdocker
+    ports:
+      - "5433:5432"
+    volumes:
+      - chat_db_data:/var/lib/postgresql/data
+      - ./sql-scripts/chats_tables.sql:/docker-entrypoint-initdb.d/chats_tables.sql
+  
+  chat-service:
+    build: ./chat-service
+    container_name: chat_service
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@chat_db:5432/chat-llmdocker
+      - SECRET_KEY=${SECRET_KEY}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - AUTH_SERVICE_URL=http://auth-service:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8001:8001"
+    depends_on:
+      - chat-db
+      - auth-service
 
 volumes:
   auth_db_data:
+  chat_db_data:
