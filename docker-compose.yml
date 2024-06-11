@@ -54,6 +54,15 @@ services:
       - chat-db
       - auth-service
 
+  frontend-service:
+    build: ./frontend-service
+    container_name: frontend_service
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
+      - chat-service
+
 volumes:
   auth_db_data:
   chat_db_data:
