@@ -10,7 +10,11 @@ LLM Docker Microservices es una aplicación basada en microservicios diseñada p
 
 Cada uno de estos servicios está contenido en su propio directorio y se despliega como un contenedor Docker independiente, permitiendo una fácil gestión y escalabilidad.
 
+### Arquitectura
+![diagrama de arquitectura](/Arquitectura.png)
 
+### Diagrama entidad relación de las bases de datos
+![diagrama entidad relación](/Diagrama%20entidad%20relación%20de%20las%20bases%20de%20datos..png)
 
 ## Guía de Despliegue
 
